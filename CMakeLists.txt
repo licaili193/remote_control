@@ -33,4 +33,8 @@ include_directories (${gflags_INCLUDE_DIR})
 find_package (yaml-cpp REQUIRED)
 include_directories (${YAML_CPP_INCLUDE_DIR})
 
+# Fast-RTPS
+find_package(fastcdr REQUIRED)
+find_package(fastrtps REQUIRED)
+
 add_subdirectory(src)
