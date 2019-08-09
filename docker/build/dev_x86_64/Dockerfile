@@ -56,3 +56,49 @@ RUN add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security ma
     make -j7 && \
     make install && \
     echo '\n\n\nStage 2 completed\n\n\n'
+
+# Install QT
+COPY scripts /third_party/scripts
+RUN cd /third_party && \
+    wget https://download.qt.io/archive/qt/5.13/5.13.0/qt-opensource-linux-x64-5.13.0.run && \
+    chmod +x qt-opensource-linux-x64-5.13.0.run && \
+    ./qt-opensource-linux-x64-5.13.0.run --script scripts/qt-noninteractive.qs --platform minimal && \
+    ln -s /qt /usr/local/Qt5.13.0 && \
+    rm qt-opensource-linux-x64-5.13.0.run && \
+    rm -rf /usr/local/Qt5.13.0/{Docs,Examples,Extras,Tools} && \
+    echo '\n\n\nStage 3 completed\n\n\n'
+
+# Install Fast-RTPS
+COPY binary/eProsima_FastRTPS-1.7.2-Linux.tar.gz /third_party/eProsima_FastRTPS-1.7.2-Linux.tar.gz
+RUN cd /third_party && \
+    mkdir eProsima_FastRTPS-1.7.2-Linux && \
+    cd eProsima_FastRTPS-1.7.2-Linux && \
+    tar -xf ../eProsima_FastRTPS-1.7.2-Linux.tar.gz && \
+    rm ../eProsima_FastRTPS-1.7.2-Linux.tar.gz && \
+    cd requiredcomponents && \
+    tar -xf eProsima_FastCDR-1.0.8-Linux.tar.gz && \
+    rm eProsima_FastCDR-1.0.8-Linux.tar.gz && \
+    cd eProsima_FastCDR-1.0.8-Linux && \
+    ./configure && \
+    make -j7 && \
+    make install && \
+    cd ../../eProsima_FastRTPS-1.7.2-Linux && \
+    ./configure && \
+    make -j7 && \
+    make install && \
+    cd /third_party && \
+    git clone https://github.com/foonathan/memory.git && \
+    cd memory && \
+    git submodule update --init --recursive && \
+    git reset 885a9d97bebe9a2f131d21d3c0928c42ab377c8b && \
+    mkdir build && \
+    cd build && \
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_SHARED_LIBS=ON .. && \
+    cmake --build . --target install && \
+    echo '\n\n\nStage 4 completed (except copying cmake files)\n\n\n'
+COPY binary/fastcdr /usr/local/share/fastcdr/cmake
+COPY binary/fastrtps /usr/local/share/fastrtps/cmake
+
+
+
+
