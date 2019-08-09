@@ -13,6 +13,7 @@ RUN apt-get update -y && \
     libgtest-dev \
     libgflags-dev \
     libgoogle-glog-dev \
+    libssl-dev \
     libyaml-cpp-dev \
     software-properties-common \
     unzip \
@@ -58,14 +59,8 @@ RUN add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security ma
     echo '\n\n\nStage 2 completed\n\n\n'
 
 # Install QT
-COPY scripts /third_party/scripts
-RUN cd /third_party && \
-    wget https://download.qt.io/archive/qt/5.13/5.13.0/qt-opensource-linux-x64-5.13.0.run && \
-    chmod +x qt-opensource-linux-x64-5.13.0.run && \
-    ./qt-opensource-linux-x64-5.13.0.run --script scripts/qt-noninteractive.qs --platform minimal && \
-    ln -s /qt /usr/local/Qt5.13.0 && \
-    rm qt-opensource-linux-x64-5.13.0.run && \
-    rm -rf /usr/local/Qt5.13.0/{Docs,Examples,Extras,Tools} && \
+RUN apt-get update -y && \
+    apt-get install -y qt5-default && \
     echo '\n\n\nStage 3 completed\n\n\n'
 
 # Install Fast-RTPS
@@ -99,6 +94,4 @@ RUN cd /third_party && \
 COPY binary/fastcdr /usr/local/share/fastcdr/cmake
 COPY binary/fastrtps /usr/local/share/fastrtps/cmake
 
-
-
-
+WORKDIR /remote_control

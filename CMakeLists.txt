@@ -37,4 +37,10 @@ include_directories (${YAML_CPP_INCLUDE_DIR})
 find_package(fastcdr REQUIRED)
 find_package(fastrtps REQUIRED)
 
+# Blend2d
+set(BLEND2D_DIR "${CMAKE_SOURCE_DIR}/src/third_party/blend2d")
+set(ASMJIT_DIR "${CMAKE_SOURCE_DIR}/src/third_party/asmhit")
+set(BLEND2D_STATIC TRUE)
+include("${BLEND2D_DIR}/CMakeLists.txt")
+
 add_subdirectory(src)
