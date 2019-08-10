@@ -95,3 +95,6 @@ COPY binary/fastcdr /usr/local/share/fastcdr/cmake
 COPY binary/fastrtps /usr/local/share/fastrtps/cmake
 
 WORKDIR /remote_control
+
+RUN groupadd -r dev && useradd -r -g dev dev
+USER dev
