@@ -1,0 +1,6 @@
+[submodule "src/third_party/asmhit"]
+	path = src/third_party/asmhit
+	url = https://github.com/asmjit/asmjit
+[submodule "src/third_party/blend2d"]
+	path = src/third_party/blend2d
+	url = https://github.com/blend2d/blend2d
