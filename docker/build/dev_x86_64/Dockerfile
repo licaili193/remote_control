@@ -44,13 +44,11 @@ RUN add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security ma
     libdc1394-22-dev && \
     mkdir third_party && \
     cd third_party && \
-    git clone https://github.com/opencv/opencv_contrib.git && \
+    git clone --branch 3.4 https://github.com/opencv/opencv_contrib.git && \
     cd opencv_contrib && \
-    git checkout -b 3.4 4ae44739a55683aa652bc8f63cf2af7572b3766a && \
     cd .. && \
-    git clone https://github.com/opencv/opencv.git && \
+    git clone --branch 3.4 https://github.com/opencv/opencv.git && \
     cd opencv && \
-    git checkout -b 3.4 d513fb4c8e5a51093ba53e3953ab06d419a37fac && \
     mkdir build && \
     cd build && \
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -DOPENCV_GENERATE_PKGCONFIG=ON .. && \
@@ -59,9 +57,28 @@ RUN add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security ma
     echo '\n\n\nStage 2 completed\n\n\n'
 
 # Install QT
-RUN apt-get update -y && \
-    apt-get install -y qt5-default && \
+RUN apt update -y && \
+    apt-get install -y libx11-dev \
+    xorg-dev \
+    libglu1-mesa-dev \
+    freeglut3-dev \
+    libglew1.5 \
+    libglew1.5-dev \
+    libglu1-mesa \
+    libglu1-mesa-dev \
+    libgl1-mesa-glx \
+    libgl1-mesa-dev && \
+    cd /third_party && \
+    git clone --branch=5.13.1 git://code.qt.io/qt/qt5.git && \
+    cd qt5 && \
+    ./init-repository && \
+    mkdir build && \
+    cd build && \
+    ../configure -nomake examples -nomake tests -opensource --confirm-license && \
+    make -j7 && \
+    make install && \
     echo '\n\n\nStage 3 completed\n\n\n'
+ENV PATH=/usr/local/Qt-5.13.1/bin:$PATH
 
 # Install Fast-RTPS
 COPY binary/eProsima_FastRTPS-1.7.2-Linux.tar.gz /third_party/eProsima_FastRTPS-1.7.2-Linux.tar.gz
@@ -85,7 +102,6 @@ RUN cd /third_party && \
     git clone https://github.com/foonathan/memory.git && \
     cd memory && \
     git submodule update --init --recursive && \
-    git reset 885a9d97bebe9a2f131d21d3c0928c42ab377c8b && \
     mkdir build && \
     cd build && \
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_SHARED_LIBS=ON .. && \
