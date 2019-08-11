@@ -94,7 +94,14 @@ RUN cd /third_party && \
 COPY binary/fastcdr /usr/local/share/fastcdr/cmake
 COPY binary/fastrtps /usr/local/share/fastrtps/cmake
 
+# Configure screens
+RUN apt update -y && \
+    apt-get install -y iputils-ping \
+    xauth \
+    x11-apps && \
+    echo '\n\n\nStage 5 completed\n\n\n'
+
 WORKDIR /remote_control
 
-RUN groupadd -r dev && useradd -r -g dev dev
-USER dev
+# RUN groupadd -r dev && useradd -r -g dev remote
+# USER remote

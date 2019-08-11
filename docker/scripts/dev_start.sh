@@ -25,8 +25,9 @@ function local_volumes() {
              -v $HOME/.cache:${DOCKER_HOME}/.cache \
              -v /dev:/dev \
              -v /media:/media \
-             -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
-             -v /etc/localtime:/etc/localtime:ro"
+             -v /tmp/.X11-unix:/tmp/.X11-unix \
+             -v /tmp/.docker.xauth:/tmp/.docker.xauth \
+             -v /etc/localtime:/etc/localtime"
     echo "${volumes}"
     set -x
 }
@@ -44,16 +45,24 @@ function main(){
         docker rm -v -f $DEV_NAME 1>/dev/null
     fi
 
+    XAUTH=/tmp/.docker.xauth
+    rm $XAUTH 2> /dev/null
+    touch $XAUTH
+    xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
     docker run --gpus all -it -d \
         --name=$DEV_NAME \
         $(local_volumes) \
         -e DISPLAY=$DISPLAY \
+        -e XAUTHORITY=$XAUTH \
+        --net=host \
         ${IMG}
     set +x
-    if [ $? -ne 0 ];then
+    if [ $? -ne 0 ]; then
         error "Failed to start docker container \"$DEV_NAME\" based on image: $IMG"
         exit 1
     fi
+    docker exec remote-dev chmod a+rwx /tmp/.X11-unix
+    docker exec remote-dev chmod a+rwx /tmp/.docker.xauth
     set -x
 }
 
