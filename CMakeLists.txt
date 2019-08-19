@@ -37,6 +37,9 @@ include_directories (${YAML_CPP_INCLUDE_DIR})
 find_package(fastcdr REQUIRED)
 find_package(fastrtps REQUIRED)
 
+# Thread
+find_package(Threads REQUIRED)
+
 # Blend2d
 set(BLEND2D_DIR "${CMAKE_SOURCE_DIR}/src/third_party/blend2d")
 set(ASMJIT_DIR "${CMAKE_SOURCE_DIR}/src/third_party/asmhit")

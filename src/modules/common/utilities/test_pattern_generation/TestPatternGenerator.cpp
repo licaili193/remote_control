@@ -4,7 +4,7 @@
 
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include "TestPatternGenerator.hpp"
+#include "modules/common/utilities/test_pattern_generation/TestPatternGenerator.hpp"
 
 namespace remote
 {

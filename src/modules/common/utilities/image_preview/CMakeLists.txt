@@ -1,13 +1,14 @@
 cmake_minimum_required(VERSION 3.1.0)
 
-project(test_pattern_generation)
+project(image_preview)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_library(test_pattern_generator
-    TestPatternGenerator.cpp
+add_library(image_previewer
+    ImagePreviewer.cpp
 )
-target_link_libraries(test_pattern_generator 
+target_link_libraries(image_previewer 
     ${OpenCV_LIBS}
+    ${CMAKE_THREAD_LIBS_INIT}
 )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
